@@ -54,14 +54,13 @@ public class PermissionCheckAspect implements Aspect {
             throw new BusinessException(566,"未携带token的请求已丢弃");
         }
         // 解析请求头中拿到的token
-        Claims parsedToken = jwtUtils.parseToken(rawToken);
+        Claims decriToken = jwtUtils.parseToken(rawToken);
         // 拼接token去redis拿到用户的元信息字符串
-        String userInfoStr = redisCacheUtil.getCacheObject(CacheConstants.LOGIN_USER_KEY + parsedToken.getSubject());
-        if (userInfoStr == null) {
+        String token = (String) decriToken.get("token");
+        LoginUserVO currentUser = redisCacheUtil.getCacheObject(CacheConstants.LOGIN_USER_KEY + token);
+        if (currentUser == null) {
             throw new UserException.UnauthorizedException("用户未登录或token已过期");
         }
-        LoginUserVO currentUser = JSONUtil.toBean(userInfoStr, LoginUserVO.class);
-
         // 拿到注解标注要求的角色，进行对比
         String[] requiredRoles = permissionCheck.value();
         PermissionCheck.Logical logical = permissionCheck.logical();

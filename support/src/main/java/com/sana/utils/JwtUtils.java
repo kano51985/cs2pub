@@ -29,7 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtils {
-    private final SecretKey key = Jwts.SIG.HS512.key().build();    @Autowired
+    private final String JWT_SIGN = "24aa4837056893e7ab0ab2936044f34f26d6cf7714331805d79a60d60d1d9493cbeb7db66fe499c6d12cf5ef1925dc8ec61c1bc6008de5adc169c0f0effb6ecc";
+    SecretKey sign = Keys.hmacShaKeyFor(JWT_SIGN.getBytes(StandardCharsets.UTF_8));
+    @Autowired
     private RedisCacheUtil redisCacheUtil;
     @Autowired
     private KeyUtil keyUtil;
@@ -42,15 +44,16 @@ public class JwtUtils {
         claims.put("token", token);
         // 刷新token
         refreshToken(loginUserVO);
+//        SecretKey sign = Keys.hmacShaKeyFor(JWT_SIGN.getBytes(StandardCharsets.UTF_8));
         return Jwts.builder()
                 .claims(claims)
-                .signWith(key)
+                .signWith(sign,Jwts.SIG.HS512)
                 .compact();
     }
 
     public Claims parseToken(String token) {
         JwtParserBuilder parser = Jwts.parser();
-        parser.setSigningKey(key);
+        parser.setSigningKey(sign);
         return parser.build().parseClaimsJws(token).getBody();
     }
 

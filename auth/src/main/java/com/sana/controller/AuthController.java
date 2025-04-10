@@ -3,6 +3,7 @@ package com.sana.controller;
 
 import com.sana.annotation.PermissionCheck;
 import com.sana.domain.dto.LoginDTO;
+import com.sana.response.R;
 import com.sana.service.IAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,8 @@ public class AuthController {
     private IAuthService authService;
 
     @PostMapping("login")
-    public String login(@RequestBody LoginDTO loginDTO) {
-        return authService.login(loginDTO);
+    public R login(@RequestBody LoginDTO loginDTO) {
+        return R.success(authService.login(loginDTO));
     }
 
     @GetMapping("test")
