@@ -1,19 +1,25 @@
 package com.sana.exception;
 
 public class BusinessException extends RuntimeException {
-    public BusinessException(String message) {
+    private final int code;
+    private final String detail;
+
+    public BusinessException(int code, String message) {
+        this(code, message, null);
+    }
+
+    public BusinessException(int code, String message, String detail) {
         super(message);
+        this.code = code;
+        this.detail = detail;
     }
 
-    public static class illegalRequestException extends BusinessException {
-        public illegalRequestException(String message) {
-            super(message);
-        }
+    // getter方法
+    public int getCode() {
+        return code;
     }
 
-    public static class RegularException extends BusinessException {
-        public RegularException(String message) {
-            super(message);
-        }
+    public String getDetail() {
+        return detail;
     }
 }

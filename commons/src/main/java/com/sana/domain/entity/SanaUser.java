@@ -2,12 +2,18 @@ package com.sana.domain.entity;
 
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author: 庞宇
@@ -17,7 +23,8 @@ import java.util.Date;
  */
 @Data
 @TableName("sana_user")
-public class SanaUser {
+public class SanaUser implements Serializable {
+    private static final long serialVersionUID = 1L;
     @TableId(type = IdType.ASSIGN_ID)
     private String id;
     private String account;
@@ -27,8 +34,13 @@ public class SanaUser {
     private String email;
     private UserStatus status;
     private String inviterId;
-    private Date createTime;
-    private Date updateTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime updateTime;
+
+    @TableField(exist = false)
+    private List<SanaRole> roleList = new ArrayList<>();
 
     @Getter
     public enum UserStatus {

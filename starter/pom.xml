@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.sana</groupId>
-            <artifactId>support</artifactId>
+            <artifactId>auth</artifactId>
         </dependency>
     </dependencies>
     <build>

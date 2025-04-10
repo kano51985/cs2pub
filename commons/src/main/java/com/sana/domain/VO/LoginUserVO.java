@@ -4,6 +4,8 @@ package com.sana.domain.VO;
 import com.sana.domain.entity.SanaUser;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author: 庞宇
  * @CreateTime: 2025-04-08
@@ -12,9 +14,9 @@ import lombok.Data;
  */
 
 @Data
-public class LoginUserVO {
+public class LoginUserVO implements Serializable {
+    private static final long serialVersionUID = 1L;
     private SanaUser user = new SanaUser();
     private String token;
-    private String role;
     private long loginTime;
 }

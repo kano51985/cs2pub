@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.sana.annotation.PermissionCheck;
 import com.sana.constants.CacheConstants;
 import com.sana.domain.VO.LoginUserVO;
+import com.sana.domain.entity.SanaRole;
 import com.sana.exception.BusinessException;
 import com.sana.exception.UserException;
 import com.sana.utils.JwtUtils;
@@ -50,7 +51,7 @@ public class PermissionCheckAspect implements Aspect {
                 RequestContextHolder.getRequestAttributes())).getRequest();
         String rawToken = request.getHeader("token");
         if (rawToken == null) {
-            throw new BusinessException.illegalRequestException("未携带token的请求已丢弃");
+            throw new BusinessException(566,"未携带token的请求已丢弃");
         }
         // 解析请求头中拿到的token
         Claims parsedToken = jwtUtils.parseToken(rawToken);
@@ -69,21 +70,22 @@ public class PermissionCheckAspect implements Aspect {
             return true;
         }
         // 拿到用户的角色
-        List<String> userRoles = Arrays.stream(currentUser.getRole().split("-")).toList();
+        List<SanaRole> roleList = currentUser.getUser().getRoleList();
+        List<String> userRoles = roleList.stream().map(SanaRole::getRole).toList();
         if(CollUtil.isEmpty(userRoles)){
-            throw new BusinessException.RegularException("用户未分配角色！");
+            throw new BusinessException(403,"权限校验失败！");
         }
         if (logical == PermissionCheck.Logical.AND) {
             // 必须包含所有要求的角色
             if (!userRoles.containsAll(Arrays.asList(requiredRoles))) {
-                throw new BusinessException.illegalRequestException("缺少必要角色权限");
+                throw new BusinessException(403,"权限校验失败！");
             }
         } else {
             // 只需包含任一要求的角色
             boolean hasAnyRole = Arrays.stream(requiredRoles)
                     .anyMatch(userRoles::contains);
             if (!hasAnyRole) {
-                throw new BusinessException.illegalRequestException("没有访问权限");
+                throw new BusinessException(403,"权限校验失败！");
             }
         }
         return true;

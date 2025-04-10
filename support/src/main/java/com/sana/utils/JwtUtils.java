@@ -29,8 +29,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtils {
-    private final String JWT_SIGN = "IDONTWANNAITWHATINEEDISLOV";
-    @Autowired
+    private final SecretKey key = Jwts.SIG.HS512.key().build();    @Autowired
     private RedisCacheUtil redisCacheUtil;
     @Autowired
     private KeyUtil keyUtil;
@@ -43,22 +42,15 @@ public class JwtUtils {
         claims.put("token", token);
         // 刷新token
         refreshToken(loginUserVO);
-        SecretKey sign = Keys.hmacShaKeyFor(JWT_SIGN.getBytes(StandardCharsets.UTF_8));
-        Password encryptionKey = keyUtil.getEncryptSecret();
-        // 选择密钥管理算法和内容加密算法
-        KeyAlgorithm<Password, ?> keyAlg = Jwts.KEY.PBES2_HS256_A128KW;
-        AeadAlgorithm encAlg = Jwts.ENC.A256GCM;
         return Jwts.builder()
                 .claims(claims)
-                .signWith(sign)
-                .encryptWith(encryptionKey, encAlg)
+                .signWith(key)
                 .compact();
     }
 
     public Claims parseToken(String token) {
         JwtParserBuilder parser = Jwts.parser();
-        parser.setSigningKey(JWT_SIGN);
-        parser.decryptWith(keyUtil.getEncryptSecret());
+        parser.setSigningKey(key);
         return parser.build().parseClaimsJws(token).getBody();
     }
 
