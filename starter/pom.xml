@@ -16,6 +16,10 @@
             <groupId>com.sana</groupId>
             <artifactId>auth</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sana</groupId>
+            <artifactId>forum</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

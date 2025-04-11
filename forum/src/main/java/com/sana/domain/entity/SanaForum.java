@@ -25,7 +25,7 @@ public class SanaForum implements Serializable {
     private String id;
     private String forumName;
     private String description;
-    @TableLogic
+    @TableLogic(value = "1", delval = "0")
     private int status;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime createTime;

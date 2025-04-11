@@ -2,6 +2,7 @@ package com.sana.controller;
 
 
 import com.sana.annotation.PermissionCheck;
+import com.sana.domain.entity.MyPage;
 import com.sana.domain.entity.SanaForum;
 import com.sana.domain.entity.SanaTopic;
 import com.sana.response.PageR;
@@ -52,18 +53,20 @@ public class SanaForumController {
     /**
      * 获取用户所拥有权限的论坛
      */
-    @GetMapping("forum/{forumId}")
-    public R getUsersForum(@RequestHeader("token") String token){
-        List<SanaForum> sanaForums = sanaForumService.getBelongedForum(token);
+    @GetMapping("{forumId}")
+    public R getUsersForum(){
+        List<SanaForum> sanaForums = sanaForumService.getBelongedForum();
         return R.success(sanaForums);
     }
 
     /**
      * 访问指定论坛，获取论坛下的所有可用帖子
      */
-    @GetMapping("forum/{forumId}/topic")
-    public R getForumBelongedTopics(@PathVariable("forumId") String forumId){
-        PageR<List<SanaTopic>> belongedTopics = sanaForumService.getForumBelongedTopics(forumId);
+    @GetMapping("{forumId}/topic")
+    public R getForumBelongedTopics(@PathVariable("forumId") String forumId,
+                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                    @RequestParam(value = "size", defaultValue = "10") int size){
+        MyPage<SanaTopic> belongedTopics = sanaForumService.getForumBelongedTopics(forumId,page,size);
         return R.success(belongedTopics);
     }
 

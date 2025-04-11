@@ -4,6 +4,8 @@ package com.sana.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageInfo;
+import com.github.pagehelper.page.PageMethod;
 import com.sana.constants.CacheConstants;
 import com.sana.domain.VO.LoginUserVO;
 import com.sana.domain.entity.*;
@@ -13,8 +15,10 @@ import com.sana.mapper.SanaTopicMapper;
 import com.sana.response.PageR;
 import com.sana.service.ISanaForumService;
 import com.sana.utils.RedisCacheUtil;
+import com.sana.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +32,7 @@ import java.util.stream.Stream;
  */
 
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class SanaForumServiceImpl extends ServiceImpl<SanaForumMapper, SanaForum> implements ISanaForumService {
     @Autowired
     private SanaForumMapper sanaForumMapper;
@@ -51,8 +56,10 @@ public class SanaForumServiceImpl extends ServiceImpl<SanaForumMapper, SanaForum
     }
 
     @Override
-    public List<SanaForum> getBelongedForum(String token) {
-        LoginUserVO userInfo = redisCacheUtil.getCacheObject(CacheConstants.LOGIN_USER_KEY + token);
+    public List<SanaForum> getBelongedForum() {
+        // 这个usercontext拿到token才有值，注释掉的话我可能得自己走数据库
+        LoginUserVO userInfo = UserContext.getUser();
+//        LoginUserVO userInfo = new LoginUserVO();
         // 拿到用户权限，根据拥有的权限去查询用户所拥有的论坛
         List<SanaRole> roleList = userInfo.getUser().getRoleList();
         // 1.1 获取角色id去查询关联表
@@ -68,10 +75,19 @@ public class SanaForumServiceImpl extends ServiceImpl<SanaForumMapper, SanaForum
     }
 
     @Override
-    public PageR<List<SanaTopic>> getForumBelongedTopics(String forumId) {
+    public MyPage<SanaTopic> getForumBelongedTopics(String forumId,int page,int size) {
         // 直接铁头查
-        // TODO 这个得分页，后面记得补一下
-        Page<SanaTopic> page = new Page<>();
+        LambdaQueryWrapper<SanaTopic> wp = new LambdaQueryWrapper<SanaTopic>()
+                .eq(SanaTopic::getForumId,forumId);
+        Page<SanaTopic> sanaTopicPage = new Page<>(page,size);
+        Page<SanaTopic> topics = sanaTopicMapper.selectPage(sanaTopicPage,wp);
+        MyPage<SanaTopic> myPage = new MyPage<>();
+        myPage.setPageNum((int)topics.getCurrent());
+        myPage.setPageSize((int)topics.getSize());
+        myPage.setTotal(topics.getTotal());
+        myPage.setPages((int)topics.getPages());
+        myPage.setPageData(topics.getRecords());
+        return myPage;
     }
 
 }

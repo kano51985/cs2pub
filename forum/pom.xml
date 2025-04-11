@@ -15,6 +15,13 @@
             <groupId>com.sana</groupId>
             <artifactId>support</artifactId>
         </dependency>
+
+        <!-- springboot检验依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+            <version>2.3.2.RELEASE</version>
+        </dependency>
     </dependencies>
 
 </project>

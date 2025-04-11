@@ -27,7 +27,7 @@ public class SanaTopic implements Serializable {
     private String id;
     private String forumId;
     private String topicName;
-    @TableLogic
+    @TableLogic(value = "1", delval = "0")
     private int status;
     private String remark;
     private String creator;

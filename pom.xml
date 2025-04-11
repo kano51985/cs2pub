@@ -33,6 +33,7 @@
         <lombok.version>1.18.34</lombok.version>
         <jwt.version>0.12.6</jwt.version>
         <jxb.version>2.3.1</jxb.version>
+        <pageHelper.version>6.1.0</pageHelper.version>
         <mysqlConn.version>8.0.33</mysqlConn.version>
         <fastjson2.version>2.0.39</fastjson2.version>
     </properties>
@@ -132,6 +133,11 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pageHelper.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

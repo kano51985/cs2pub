@@ -39,11 +39,13 @@ public class PreRequestInterceptor extends OncePerRequestFilter {
             if (StrUtil.isNotBlank(rawToken)) {
                 Claims claims = jwtUtils.parseToken(rawToken);
                 String parsedToken = (String) claims.get("token");
+                System.out.println("Parsed token: " + parsedToken); // Debug log
 
                 // 2. 从Redis获取用户信息
                 LoginUserVO loginUserVo = redisCacheUtil.getCacheObject(
                         CacheConstants.LOGIN_USER_KEY + parsedToken
                 );
+                System.out.println("Login user from Redis: " + loginUserVo); // Debug log
 
                 // 3. 存入ThreadLocal
                 if (loginUserVo != null) {
@@ -55,7 +57,6 @@ public class PreRequestInterceptor extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } finally {
             // 5. 请求结束后清除ThreadLocal
-            System.out.println(UserContext.getUser().toString());
             UserContext.clear(); // 防止内存泄漏
         }
     }

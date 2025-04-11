@@ -23,6 +23,9 @@ public class AuthController {
     @Autowired
     private IAuthService authService;
 
+    /**
+     * 登录
+     */
     @PostMapping("login")
     public R login(@RequestBody LoginDTO loginDTO) {
         return R.success(authService.login(loginDTO));
@@ -31,6 +34,11 @@ public class AuthController {
     @GetMapping("test")
     @PermissionCheck("admin")
     public void test() {
-        System.out.println("1111111");
+        System.out.println("--------------请求成功-----------------------");
+    }
+
+    @GetMapping("test2")
+    public void test2() {
+        System.out.println("--------------请求成功-----------------------");
     }
 }

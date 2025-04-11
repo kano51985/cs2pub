@@ -1,6 +1,7 @@
 package com.sana.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.sana.domain.entity.MyPage;
 import com.sana.domain.entity.SanaForum;
 import com.sana.domain.entity.SanaTopic;
 import com.sana.response.PageR;
@@ -19,7 +20,7 @@ public interface ISanaForumService extends IService<SanaForum> {
      */
     List<SanaForum> getAllForums();
 
-    List<SanaForum> getBelongedForum(String token);
+    List<SanaForum> getBelongedForum();
 
-    PageR<List<SanaTopic>> getForumBelongedTopics(String forumId);
+    MyPage<SanaTopic> getForumBelongedTopics(String forumId, int page, int size);
 }
