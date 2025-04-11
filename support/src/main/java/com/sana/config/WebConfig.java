@@ -25,7 +25,11 @@ public class WebConfig{
         FilterRegistrationBean<PreRequestInterceptor> bean = new FilterRegistrationBean<>();
         bean.setFilter(interceptor);
         // 拦截指定路径，应该拦截所有请求，放开auth请求
-        bean.addUrlPatterns("/forum/**","/topic/**","/repl**");
+//        bean.addUrlPatterns("/user/**","/user",
+//                "/forum","/forum/**",
+//                "/reply","/reply/**",
+//                "/topic","/topic/**");
+        bean.addUrlPatterns("/*");
         // 设置最高优先级
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;

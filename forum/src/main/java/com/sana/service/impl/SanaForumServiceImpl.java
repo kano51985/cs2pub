@@ -45,8 +45,6 @@ public class SanaForumServiceImpl extends ServiceImpl<SanaForumMapper, SanaForum
     @Override
     public void createNewForum(SanaForum sanaForum) {
         sanaForum.setStatus(1);
-        sanaForum.setCreateTime(LocalDateTime.now());
-        sanaForum.setUpdateTime(LocalDateTime.now());
         sanaForumMapper.insert(sanaForum);
     }
 
@@ -66,12 +64,10 @@ public class SanaForumServiceImpl extends ServiceImpl<SanaForumMapper, SanaForum
         List<String> roleIds = roleList.stream().map(SanaRole::getId).toList();
         List<SanaRoleForum> sanaRoleForums = sanaRoleForumMapper.selectList(new LambdaQueryWrapper<SanaRoleForum>()
                 .in(SanaRoleForum::getRoleId, roleIds));
-        Stream<String> belongedForumIds = sanaRoleForums.stream().map(SanaRoleForum::getForumId);
+        List<String> forumIdList = sanaRoleForums.stream().map(SanaRoleForum::getForumId).toList();
         // 1.2 根据关联表的论坛id获取用户所有论坛
-        List<SanaForum> belongedForums = sanaForumMapper.selectList(new LambdaQueryWrapper<SanaForum>()
-                .in(SanaForum::getId, belongedForumIds));
-        // TODO 后期需要自行手动配置哪个角色拥有哪个论坛的访问权限
-        return belongedForums;
+        return sanaForumMapper.selectList(new LambdaQueryWrapper<SanaForum>()
+                .in(SanaForum::getId,forumIdList));
     }
 
     @Override
