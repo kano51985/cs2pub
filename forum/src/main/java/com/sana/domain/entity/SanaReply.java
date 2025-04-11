@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,7 +18,7 @@ import java.util.Date;
  * @Description: 帖子下的回复实体类
  * @Version: 1.0
  */
-
+@Data
 @TableName("table_reply")
 public class SanaReply implements Serializable {
     private static final long serialVersionUID = 1L;

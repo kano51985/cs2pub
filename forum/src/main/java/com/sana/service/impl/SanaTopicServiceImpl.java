@@ -4,6 +4,7 @@ package com.sana.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sana.domain.entity.SanaTopic;
 import com.sana.mapper.SanaTopicMapper;
+import com.sana.service.ISanaTopicService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,5 +15,5 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class SanaTopicServiceImpl extends ServiceImpl<SanaTopicMapper, SanaTopic> {
+public class SanaTopicServiceImpl extends ServiceImpl<SanaTopicMapper, SanaTopic> implements ISanaTopicService {
 }

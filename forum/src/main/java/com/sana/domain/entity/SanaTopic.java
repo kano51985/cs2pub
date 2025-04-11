@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,7 +19,7 @@ import java.util.Date;
  * @Description: 论坛贴实体类
  * @Version: 1.0
  */
-
+@Data
 @TableName("sana_topic")
 public class SanaTopic implements Serializable {
     private static final long serialVersionUID = 1L;

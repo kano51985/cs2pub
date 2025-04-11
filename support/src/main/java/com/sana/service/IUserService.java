@@ -1,4 +1,7 @@
 package com.sana.service;
 
-public interface IUserService {
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.sana.domain.entity.SanaUser;
+
+public interface IUserService extends IService<SanaUser> {
 }
