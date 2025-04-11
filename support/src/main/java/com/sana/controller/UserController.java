@@ -4,6 +4,8 @@ package com.sana.controller;
 import cn.hutool.core.util.ObjectUtil;
 import com.sana.annotation.PermissionCheck;
 import com.sana.domain.entity.SanaUser;
+import com.sana.domain.enums.UserServiceResponseEnum;
+import com.sana.domain.req.RegisterReq;
 import com.sana.response.R;
 import com.sana.service.IUserService;
 import com.sana.utils.UserContext;
@@ -75,5 +77,17 @@ public class UserController {
                                    @RequestParam("status") SanaUser.UserStatus status){
         boolean flag = userService.auditUserStatus(userId, status);
         return flag ? R.success("修改成功") : R.error();
+    }
+
+    /**
+     * 注册用户
+     */
+    @PostMapping
+    public R registerUser(@RequestBody RegisterReq user, String inviteCode){
+        UserServiceResponseEnum responseEnum = userService.register(user,inviteCode);
+        if (responseEnum == UserServiceResponseEnum.SUCCESS){
+            return R.success("注册成功");
+        }
+        return R.error(responseEnum.getMessage());
     }
 }

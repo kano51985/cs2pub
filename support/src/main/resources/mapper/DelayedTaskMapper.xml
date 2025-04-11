@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sana.mapper.delay.DelayedTaskMapper">
+
+    <select id="selectPendingTasks" resultType="com.sana.domain.entity.delay.DelayedTask">
+        SELECT *
+        FROM delayed_tasks
+        WHERE status = 'PENDING'
+          AND execute_time BETWEEN #{startTime} AND #{endTime}
+        ORDER BY execute_time ASC
+    </select>
+
+</mapper>

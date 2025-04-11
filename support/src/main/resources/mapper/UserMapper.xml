@@ -44,6 +44,9 @@
             <if test="accountType == -1">  <!-- 修正: 使用 == 或 eq -->
                 AND su.account = #{account}
             </if>
+            <if test="accountType == 1">
+                AND su.email = #{account}
+            </if>
         </where>
     </select>
 </mapper>
