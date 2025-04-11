@@ -2,6 +2,7 @@ package com.sana.controller;
 
 
 import cn.hutool.core.util.ObjectUtil;
+import com.sana.annotation.PermissionCheck;
 import com.sana.domain.entity.SanaUser;
 import com.sana.response.R;
 import com.sana.service.IUserService;
@@ -50,5 +51,29 @@ public class UserController {
         }
         return R.error();
 
+    }
+
+    /**
+     * 注销用户
+     */
+    @DeleteMapping
+    public R deleteUserInfo(){
+        String contextUid = UserContext.getUser().getUser().getId();
+        if(ObjectUtil.isNotNull(contextUid)){
+            userService.removeById(contextUid);
+            return R.success("注销成功");
+        }
+        return R.error();
+    }
+
+    /**
+     * 强制修改用户状态
+     */
+    @PutMapping("/status")
+    @PermissionCheck(value = {"admin", "stuff"}, logical = PermissionCheck.Logical.OR)
+    public R forceUpdateUserStatus(@RequestParam("userId") String userId,
+                                   @RequestParam("status") SanaUser.UserStatus status){
+        boolean flag = userService.auditUserStatus(userId, status);
+        return flag ? R.success("修改成功") : R.error();
     }
 }

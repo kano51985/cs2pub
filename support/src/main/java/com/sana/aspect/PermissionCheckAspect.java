@@ -8,6 +8,7 @@ import com.sana.annotation.PermissionCheck;
 import com.sana.constants.CacheConstants;
 import com.sana.domain.VO.LoginUserVO;
 import com.sana.domain.entity.SanaRole;
+import com.sana.domain.entity.SanaUser;
 import com.sana.exception.BusinessException;
 import com.sana.exception.UserException;
 import com.sana.utils.JwtUtils;
@@ -64,9 +65,9 @@ public class PermissionCheckAspect implements Aspect {
         // 拿到注解标注要求的角色，进行对比
         String[] requiredRoles = permissionCheck.value();
         PermissionCheck.Logical logical = permissionCheck.logical();
-        // 如果没有设置角色，则放行
+        // 如果没有设置角色，则打回
         if (ArrayUtil.isEmpty(requiredRoles)) {
-            return true;
+            return false;
         }
         // 拿到用户的角色
         List<SanaRole> roleList = currentUser.getUser().getRoleList();
@@ -86,6 +87,13 @@ public class PermissionCheckAspect implements Aspect {
             if (!hasAnyRole) {
                 throw new BusinessException(403,"权限校验失败！");
             }
+        }
+        // 若账户非正常状态则直接过滤掉（我没找到notequal方法）
+        if (currentUser.getUser().getStatus().equals(SanaUser.UserStatus.banned)||
+                currentUser.getUser().getStatus().equals(SanaUser.UserStatus.suspended)||
+                currentUser.getUser().getStatus().equals(SanaUser.UserStatus.restricted)
+        ){
+            return false;
         }
         return true;
     }

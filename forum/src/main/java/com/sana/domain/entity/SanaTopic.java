@@ -1,17 +1,11 @@
 package com.sana.domain.entity;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
+import com.baomidou.mybatisplus.annotation.*;
+import com.sana.domain.entity.base.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @Author: 庞宇
@@ -21,19 +15,16 @@ import java.util.Date;
  */
 @Data
 @TableName("sana_topic")
-public class SanaTopic implements Serializable {
+public class SanaTopic extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.ASSIGN_ID)
     private String id;
     private String forumId;
     private String topicName;
+    // 默认为1楼回复的内容
+    private String content;
     @TableLogic(value = "1", delval = "0")
     private int status;
     private String remark;
-    private String creator;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime createTime;
-    private String updater;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime updateTime;
+
 }

@@ -6,6 +6,7 @@ import com.sana.domain.entity.SanaUser;
 import com.sana.mapper.UserMapper;
 import com.sana.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,4 +19,15 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class IUserServiceImpl extends ServiceImpl<UserMapper, SanaUser> implements IUserService{
+    @Autowired
+    private UserMapper userMapper;
+    @Override
+    public boolean auditUserStatus(String userId, SanaUser.UserStatus status) {
+        SanaUser matchedUser = userMapper.selectById(userId);
+        if (matchedUser != null){
+            matchedUser.setStatus(status);
+        }
+        int i = userMapper.updateById(matchedUser);
+        return i==1;
+    }
 }

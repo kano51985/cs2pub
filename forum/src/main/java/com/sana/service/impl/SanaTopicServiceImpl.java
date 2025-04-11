@@ -39,22 +39,25 @@ public class SanaTopicServiceImpl extends ServiceImpl<SanaTopicMapper, SanaTopic
     private SanaReplyMapper replyMapper;
     @Override
     public boolean createNewTopic(SanaTopic topicInstance) {
-        String userId = UserContext.getUser().getUser().getId();
-        topicInstance.setCreator(userId);
-        topicInstance.setCreateTime(LocalDateTime.now());
         topicInstance.setStatus(1);
-        topicInstance.setUpdater(userId);
-        topicInstance.setUpdateTime(LocalDateTime.now());
         int insert = sanaTopicMapper.insert(topicInstance);
-        return insert == 1;
+        // 按理来说，发帖设置完标题后还需要设置content内容，同时发帖者是1楼
+        if (insert == 1){
+            // 向回复表插入关联内容
+            SanaReply reply = new SanaReply();
+            reply.setContent(topicInstance.getContent());
+            reply.setFloor(1);
+            reply.setTopicId(topicInstance.getId());
+            reply.setStatus(1);
+            int replyIns = replyMapper.insert(reply);
+            return replyIns == 1;
+        }
+        return false;
+
     }
 
     @Override
     public boolean updateTopic(SanaTopic topicInstance) {
-        String userId = UserContext.getUser().getUser().getId();
-        // 修改
-        topicInstance.setUpdater(userId);
-        topicInstance.setUpdateTime(LocalDateTime.now());
         /*
           判断当前用户是否是帖子的创建者，或者是否是管理员
          */

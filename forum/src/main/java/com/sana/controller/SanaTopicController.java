@@ -40,8 +40,7 @@ public class SanaTopicController {
      * 发帖子
      */
     @PostMapping
-    public R createNewTopic(@RequestBody SanaTopic topicInstance,@RequestHeader("token") String token) {
-        // todo 检查是否拥有论坛权限
+    public R createNewTopic(@RequestBody SanaTopic topicInstance) {
         boolean flag = sanaTopicService.createNewTopic(topicInstance);
         return flag? R.success("发帖成功") : R.error("发帖失败");
     }
