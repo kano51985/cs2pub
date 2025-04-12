@@ -1,20 +1,13 @@
 package com.sana.service.impl;
 
 
-import cn.hutool.system.UserInfo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.pagehelper.PageInfo;
-import com.github.pagehelper.page.PageMethod;
 import com.sana.constants.RoleConstants;
 import com.sana.domain.entity.*;
 import com.sana.mapper.SanaReplyMapper;
 import com.sana.mapper.SanaTopicMapper;
-import com.sana.request.PageParam;
-import com.sana.response.PageR;
 import com.sana.service.ISanaTopicService;
 import com.sana.utils.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @Author: 庞宇
