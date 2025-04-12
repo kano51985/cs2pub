@@ -2,6 +2,7 @@ package com.sana.config;
 
 
 import com.sana.interceptor.PreRequestInterceptor;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -19,16 +20,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Slf4j
 @Configuration
-public class WebConfig{
-    @Bean
-    public FilterRegistrationBean<PreRequestInterceptor> preRequestFilter(PreRequestInterceptor interceptor) {
-        FilterRegistrationBean<PreRequestInterceptor> bean = new FilterRegistrationBean<>();
-        bean.setFilter(interceptor);
-        // 拦截指定路径，应该拦截所有请求，放开auth请求
-        bean.addUrlPatterns("/forum/**","/topic/**","/repl**");
-        // 设置最高优先级
-        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return bean;
+public class WebConfig extends WebMvcConfigurationSupport {
+
+    @Resource
+    private PreRequestInterceptor interceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(interceptor).addPathPatterns("/**").
+                excludePathPatterns("/auth/**");
     }
 
 }

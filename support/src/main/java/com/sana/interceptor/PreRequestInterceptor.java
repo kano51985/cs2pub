@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.io.IOException;
 
@@ -26,13 +26,14 @@ import java.io.IOException;
  */
 
 @Component
-public class PreRequestInterceptor extends OncePerRequestFilter {
+public class PreRequestInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtUtils jwtUtils;
     @Autowired
     private RedisCacheUtil redisCacheUtil;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         try {
             // 1. 解析Token
             String rawToken = request.getHeader("token");
@@ -50,14 +51,19 @@ public class PreRequestInterceptor extends OncePerRequestFilter {
                 // 3. 存入ThreadLocal
                 if (loginUserVo != null) {
                     UserContext.setUser(loginUserVo);
+                    return true;
                 }
             }
-
-            // 4. 放行请求
-            filterChain.doFilter(request, response);
         } finally {
-            // 5. 请求结束后清除ThreadLocal
-            UserContext.clear(); // 防止内存泄漏
+            // 5. 异常后清除ThreadLocal 防止内存泄漏
+            UserContext.clear();
         }
+        throw new RuntimeException("请重新登录");
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        // 请求处理完毕，清除ThreadLocal，防止内存泄漏
+        UserContext.clear();
     }
 }
