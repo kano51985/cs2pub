@@ -32,3 +32,6 @@ logging:
     com.sana: debug
 server:
   port: 10908
+
+sana:
+  defaultAvatar: https://lovesana.oss-cn-beijing.aliyuncs.com/defaultAvatar.png

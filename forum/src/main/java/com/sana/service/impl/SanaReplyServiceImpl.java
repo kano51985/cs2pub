@@ -40,11 +40,6 @@ public class SanaReplyServiceImpl extends ServiceImpl<SanaReplyMapper, SanaReply
 
     @Override
     public boolean replyTopic(SanaReply sanaReply) {
-        System.out.println("-------------------------------------------------");
-        sanaReply.setCreator(UserContext.getUser().getUser().getId());
-        sanaReply.setUpdater(UserContext.getUser().getUser().getId());
-        sanaReply.setCreateTime(new Date());
-        sanaReply.setUpdateTime(new Date());
         sanaReply.setStatus(1);
         // 拿到楼层
         Integer maxFloor = sanaReplyMapper.selectList(new LambdaQueryWrapper<SanaReply>()

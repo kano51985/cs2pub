@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sana.domain.entity.base.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * @Author: 庞宇
@@ -18,8 +18,9 @@ import java.time.LocalDateTime;
  * @Version: 1.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("sana_forum")
-public class SanaForum implements Serializable {
+public class SanaForum extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.ASSIGN_ID)
     private String id;
@@ -27,8 +28,4 @@ public class SanaForum implements Serializable {
     private String description;
     @TableLogic(value = "1", delval = "0")
     private int status;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime createTime;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime updateTime;
 }

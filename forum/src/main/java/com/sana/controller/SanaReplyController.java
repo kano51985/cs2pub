@@ -48,7 +48,7 @@ public class SanaReplyController {
     /**
      * 删除回复
      */
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("{id}")
     public R deleteTopic(@PathVariable("id") String id) {
         return R.success(sanaReplyService.getOptById(id));
     }
@@ -56,7 +56,7 @@ public class SanaReplyController {
     /**
      * 修改回复
      */
-    @PutMapping("update/{id}")
+    @PutMapping("{id}")
     public R updateTopic(@RequestBody @Valid SanaReplyUpdateReq req) {
         boolean flag = sanaReplyService.updateByReplyId(req);
         return flag ? R.success("修改成功") : R.error("修改失败");

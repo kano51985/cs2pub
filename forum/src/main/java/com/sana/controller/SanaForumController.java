@@ -32,7 +32,7 @@ public class SanaForumController {
      * 新建论坛（需要论坛名和论坛描述）
      * @param sanaForum
      */
-    @PostMapping("forum")
+    @PostMapping
     @PermissionCheck("admin")
     public void createNewForum(@RequestBody SanaForum sanaForum) {
         sanaForumService.createNewForum(sanaForum);
@@ -73,7 +73,7 @@ public class SanaForumController {
     /**
      * 删除论坛
      */
-    @DeleteMapping("forum/{forumId}")
+    @DeleteMapping("{forumId}")
     @PermissionCheck("admin")
     public R deleteForum(@PathVariable("forumId") String forumId){
         boolean b = sanaForumService.removeById(forumId);
@@ -83,7 +83,7 @@ public class SanaForumController {
     /**
      * 修改论坛
      */
-    @PutMapping("forum/{forumId}")
+    @PutMapping("{forumId}")
     @PermissionCheck("admin")
     public R updateForum(@PathVariable("forumId") String forumId,@RequestBody SanaForum sanaForum){
         sanaForum.setId(forumId);

@@ -4,11 +4,8 @@ package com.sana.controller;
 import com.sana.domain.entity.MyPage;
 import com.sana.domain.entity.SanaReply;
 import com.sana.domain.entity.SanaTopic;
-import com.sana.mapper.SanaTopicMapper;
-import com.sana.response.PageR;
 import com.sana.response.R;
 import com.sana.service.ISanaTopicService;
-import com.sana.utils.UserUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +40,7 @@ public class SanaTopicController {
      * 发帖子
      */
     @PostMapping
-    public R createNewTopic(@RequestBody SanaTopic topicInstance,@RequestHeader("token") String token) {
-        // todo 检查是否拥有论坛权限
+    public R createNewTopic(@RequestBody SanaTopic topicInstance) {
         boolean flag = sanaTopicService.createNewTopic(topicInstance);
         return flag? R.success("发帖成功") : R.error("发帖失败");
     }

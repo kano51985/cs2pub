@@ -2,7 +2,10 @@ package com.sana.controller;
 
 
 import cn.hutool.core.util.ObjectUtil;
+import com.sana.annotation.PermissionCheck;
 import com.sana.domain.entity.SanaUser;
+import com.sana.domain.enums.UserServiceResponseEnum;
+import com.sana.domain.req.RegisterReq;
 import com.sana.response.R;
 import com.sana.service.IUserService;
 import com.sana.utils.UserContext;
@@ -50,5 +53,41 @@ public class UserController {
         }
         return R.error();
 
+    }
+
+    /**
+     * 注销用户
+     */
+    @DeleteMapping
+    public R deleteUserInfo(){
+        String contextUid = UserContext.getUser().getUser().getId();
+        if(ObjectUtil.isNotNull(contextUid)){
+            userService.removeById(contextUid);
+            return R.success("注销成功");
+        }
+        return R.error();
+    }
+
+    /**
+     * 强制修改用户状态
+     */
+    @PutMapping("/status")
+    @PermissionCheck(value = {"admin", "stuff"}, logical = PermissionCheck.Logical.OR)
+    public R forceUpdateUserStatus(@RequestParam("userId") String userId,
+                                   @RequestParam("status") SanaUser.UserStatus status){
+        boolean flag = userService.auditUserStatus(userId, status);
+        return flag ? R.success("修改成功") : R.error();
+    }
+
+    /**
+     * 注册用户
+     */
+    @PostMapping
+    public R registerUser(@RequestBody RegisterReq user, String inviteCode){
+        UserServiceResponseEnum responseEnum = userService.register(user,inviteCode);
+        if (responseEnum == UserServiceResponseEnum.SUCCESS){
+            return R.success("注册成功");
+        }
+        return R.error(responseEnum.getMessage());
     }
 }
